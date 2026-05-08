@@ -1,0 +1,32 @@
+GROUP B
+1 FACEBOOK
+
+1.	import pandas as pd
+ import numpy as np
+2.	pwd
+3.	df=pd.read_csv("dataset_Facebook.csv",sep=';')
+4.	df
+5.	df.describe()
+6.	df.shape
+7.	df1=df[['Page total likes','Category','Post Month','Post Weekday']].loc[0:15]
+8.	df1
+9.	df2=df[['Page total likes','Category','Post Month','Post Weekday']].loc[16:30]
+10.	df2
+11.	df3=df[['Page total likes','Category','Post Month','Post Weekday']].loc[31:50]
+12.	df3
+13.	#Merging Data
+merge_df=pd.concat([df1,df2,df3])
+14.	merge_df
+15.	sort_value=df.sort_values('Page total likes',ascending=True)
+16.	sort_value
+17.	df.transpose()
+18.	shaping=df.shape
+19.	shaping
+20.	# DataFrame containing the data
+# Rows are grouped by 'Type' and then by 'Category'
+# The column whose values are aggregated
+Pivot_table=pd.pivot_table(df,index=['Type','Category'],values='like')
+21.	Pivot_table
+
+
+
