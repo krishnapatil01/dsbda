@@ -1,0 +1,69 @@
+Adult steps
+1D).Bar Chart
+Age-Rows , Race-colour
+2d).Scatter plot
+Age-column , Hrs-per – rows,  Salary- colour
+3) 3D (Volumetric) Visualization — Bubble Chart
+    age → Columns
+    hours-per-week → Rows 
+    Edu - size
+    salary/income → Color
+4) Temporal Data Visualization — Line Chart
+    age → Columns
+    hours-per-week → Rows
+    Marks → Line
+    salary/income → Color
+5) Multidimensional Data Visualization — Heat Map
+    workclass → Rows
+     education → Columns
+     hours-per-week → Color
+    Marks → Square
+6) Tree / Hierarchical Visualization — Treemap
+* occupation → Color
+* hours-per-week → Size
+* occupation → Label/Text
+7) Network Visualization — Packed Bubble
+* occupation → Color
+* occupation → Label/Text
+* hours-per-week → Size
+
+Iris Steps
+1)1D Bar Chart
+    Species → Rows
+        Iris.csv (Count) → Columns
+         Marks → Bar
+2) 2DScatter Plot
+    Sepal Length Cm → Columns
+    Petal Length Cm → Rows
+    Species → Color
+        Marks → Circle
+    Analysis → Uncheck Aggregate Measures
+3) 3D Bubble Chart
+    Sepal Length Cm → Columns
+    Petal Length Cm → Rows
+    Petal Width Cm → Size
+        Species → Color
+    Marks → Circle
+4) Temporal Data Visualization — Line Chart
+1. Analysis → Create Calculated Field
+2. Name: Date 
+DATEADD('day',[Id],#2024-01-01#)
+    Date → Columns
+    Sepal Length Cm → Rows
+    Species → Color
+    Marks → Line
+Click dropdown on YEAR(Date) → Exact Date → Continuous
+5) Multidimensional Data Visualization — Heat Map
+ Species → Rows
+Measure Names → Columns
+Measure Values → Color
+Marks → Square
+6) Tree / Hierarchical Visualization — Treemap
+ Species → Color
+Sepal Length Cm → Size
+Species → Label/Text
+7) Network Data Visualization — Packed Bubble
+ Species → Color
+Species → Label/Text
+Sepal Length Cm → Size
+
