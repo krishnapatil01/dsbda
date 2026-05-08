@@ -1,0 +1,103 @@
+GROUP B
+2 HEART
+1.	# import pandas library
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import accuracy_score,confusion_matrix
+from sklearn.linear_model import LogisticRegression
+import seaborn as sns
+import matplotlib.pyplot as plt
+2.	pwd
+3.	# Reading csv file
+df = pd.read_csv("Heart.csv")
+df.head()
+4.	df.shape
+5.	#It removes repeated rows so that each row appears only once.
+df = df.drop_duplicates()
+6.	df
+7.	df.shape
+8.	# Count ,min,max ,etc of each column
+df.describe()
+9.	# Information about each column data
+df.info()
+10.	#Finding null values in each column
+df.isna().sum()
+11.	df.head()
+12.	#unique() finds all different values in that column
+df.fbs.unique()
+13.	subSet1 = df[['age','cp','chol','thalachh']]
+14.	subSet2 = df[['exng','slp','output']]
+15.	#This command combines two DataFrames using a cross join.#subSet1#First DataFrame (left table)#subSet2#Second DataFrame (right table)#Every row of subSet1 is combined withevery row of subSet2
+merged_df = subSet1.merge(right=subSet2,how='cross')
+merged_df.head()
+16.	df.columns
+17.	#“If something goes wrong, error correcting identifies the problem and fixes it automatically or with guidance.# Error Correcting in Data Processing# 1.Removing duplicate data#2.Fixing missing values#3.Removing outliers#4.Correcting wrong formats#An outlier is a data value that is very different from the rest of the data.#It is unusually high or unusually low compared to other values.#Consider student marks: 45, 48, 50, 47, 49, 100     Most marks are around 45–50  ,100 is far away from others  ,So, 100 is an outlier
+def remove_outliers(column):           Q1 = column.quantile(0.25)         #Calculates the 1st quartile (25%)   25% of the data values are below this point
+ Q3 = column.quantile(0.75)         #Calculates the 3rd quartile (75%)   75% of the data values are below this point
+IQR = Q3 - Q1                      #Computes the Interquartile Range    Measures the spread of the middle 50% of the data
+threshold = 1.5 * IQR              #Sets the outlier limit The value 1.5 × IQR is a standard rule to detect 
+outlier_mask = (column < Q1 - threshold) | (column > Q3 + threshold)     #Creates a True/False mask  True → value is an outlier  False → value is normal
+return column[~outlier_mask]       #Returns only the values that are not outliers
+#The function finds very small or very large values compared to most data and removes them.
+18.	 
+19.	# Remove outliers for each column using a loop
+#This loop removes outliers from each specified column in the DataFrame.
+col_name = ['cp','thalachh','exng','oldpeak','slp','caa']
+for col in col_name:
+  df[col] = remove_outliers(df[col])
+20.	plt.figure(figsize=(5, 6))  # Adjust the figure size if needed
+for col in col_name:
+    sns.boxplot(data=df[col])
+    plt.title(col)
+    plt.show()
+21.	#drops rows with NaN (missing values)
+df = df.dropna()
+22.	df.isna().sum()
+23.	#It deletes the column named fbs from the DataFrame and saves the updated DataFrame back into df.#axis=1 → columns
+df = df.drop('fbs',axis=1)
+24.	# Compute correlations between features and target   
+#Computes the correlation matrix
+correlations = df.corr()['output'].drop('output')
+# Print correlations
+print("Correlation with the Target:")
+print(correlations)
+print()
+# Plot correlation heatmap
+plt.figure(figsize=(8, 6))
+sns.heatmap(df.corr(), annot=True, cmap='coolwarm')     
+#cmap='coolwarm'  Red → strong positive correlation  Blue → strong negative correlation
+plt.title('Correlation Heatmap')
+plt.show()
+25.	# df.isna().sum()# splitting data using train test split
+x = df[['cp','thalachh','exng','oldpeak','slp','caa']]
+y = df.output                                                                    
+ #y is the dependent variable (target) #The model will learn to predict output
+26.	x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=0)  
+# 20% data for testing, 80% for training
+x_train.shape,x_test.shape,y_train.shape,y_test.shape
+27.	from sklearn.preprocessing import StandardScaler
+28.	scaler = StandardScaler()
+29.	x_train_scaled = scaler.fit_transform(x_train)
+x_test_scaled = scaler.transform(x_test)
+30.	y_train= np.array(y_train).reshape(-1, 1)
+y_test= np.array(y_test).reshape(-1, 1)
+31.	y_train.shape
+32.	
+model = LogisticRegression()  
+  #Initializes a Logistic Regression classifier Logistic Regression is used for binary classification (0 or 1)
+model.fit(x_train_scaled, y_train)
+# Make predictions on the test set
+y_pred = model.predict(x_test_scaled)
+# Evaluate the model's accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+33.	from sklearn.tree import DecisionTreeClassifier
+tc=DecisionTreeClassifier(criterion='entropy')
+tc.fit(x_train_scaled,y_train)
+y_pred=tc.predict(x_test_scaled)
+print("Training Accuracy Score :",accuracy_score(y_pred,y_test))
+print("Training Confusion Matrix  :",confusion_matrix(y_pred,y_test))
