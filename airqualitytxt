@@ -1,0 +1,112 @@
+GROUP B
+2.2Airquality
+1.	import pandas as pd
+import numpy as np
+2.	pwd
+3.	df = pd.read_csv('airquality_data.csv', encoding='cp1252')
+4.	df
+5.	df.head()
+6.	df.info()
+7.	df.columns
+8.	# Change data type from float64 to float32 for Space Complexity
+df['so2'] = df['so2'].astype('float32')
+df['no2'] = df['no2'].astype('float32')
+df['rspm'] = df['rspm'].astype('float32')
+df['spm'] = df['spm'].astype('float32')
+df['date'] = df['date'].astype('string')
+df.info()
+9.	df=df.drop_duplicates()
+10.	df.isna().sum()
+11.	percent_missing = df.isnull().sum() * 100 / len(df)
+12.	percent_missing.sort_values(ascending=False)
+13.	df=df.drop(['stn_code', 'agency','sampling_date','location_monitoring_station','pm2_5'], axis = 1)
+14.	df.head()
+15.	df.columns
+16.	col_var = ['state', 'location', 'type','date']
+col_num = ['so2','no2','rspm','spm']
+17.	for col in df.columns:
+  if df[col].dtype == 'object' or df[col].dtype == 'string':
+        df[col] = df[col].fillna(df[col].mode()[0])
+    else:
+        df[col] = df[col].fillna(df[col].mean())
+18.	df.isna().sum()
+19.	df
+20.	df.isna().sum()
+21.	subSet1 = df[['state', 'type']]
+subSet2 = df[['state','location']]
+22.	subSet1.head()
+23.	subSet2.head()
+24.	concatenated_df = pd.concat([subSet1, subSet2], axis=1)
+25.	concatenated_df
+26.	def remove_outliers(column):
+ Q1 = column.quantile(0.25)
+    Q3 = column.quantile(0.75)
+    IQR = Q3 - Q1
+    threshold = 1.5 * IQR
+    outlier_mask = (column < Q1 - threshold) | (column > Q3 + threshold)
+    return column[~outlier_mask]
+27.	df.columns
+28.	# Remove outliers for each column using a loop
+col_name = ['so2', 'no2', 'rspm', 'spm']
+for col in col_name:
+    df[col] = remove_outliers(df[col])
+29.	import seaborn as sns
+import matplotlib.pyplot as plt
+30.	plt.figure(figsize=(10, 6))  # Adjust the figure size if needed
+for col in col_name:
+    sns.boxplot(data=df[col])
+    plt.title(col)
+    plt.show()
+31.	from sklearn.preprocessing import LabelEncoder
+col_label= ['state','location','type']
+# Initialize LabelEncoder
+encoder = LabelEncoder()
+# Iterate over columns
+for col in df.columns:
+        # Fit and transform the column
+        df[col] = encoder.fit_transform(df[col])
+32.	df
+33.	df.head()
+34.	# Check datatype of each column
+df.dtypes
+35.	# Check missing values
+df.isnull().sum()
+36.	df.describe()
+37.	# Normalize / Scale data
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler()
+df_scaled = scaler.fit_transform(df)
+# Convert back to DataFrame
+df_scaled = pd.DataFrame(df_scaled, columns=df.columns)
+df_scaled.head()
+38.	# Standardization
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+df_standardized = scaler.fit_transform(df)
+df_standardized = pd.DataFrame(df_standardized, columns=df.columns)
+df_standardized.head()
+39.	# Check correlation
+plt.figure(figsize=(8,6))
+sns.heatmap(df.corr(), annot=True, cmap='coolwarm')
+plt.title("Correlation Heatmap")
+plt.show()
+40.	# Split features and target
+X = df.drop('state', axis=1)
+y = df['state']
+41.	# Train-test split
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(    X, y,
+    test_size=0.2,
+    random_state=42)
+42.	# Import model
+from sklearn.tree import DecisionTreeClassifier
+43.	# Create model
+model = DecisionTreeClassifier()
+44.	# Train model
+model.fit(X_train, y_train)
+45.	# Predict values
+y_pred = model.predict(X_test)
+46.	# Check accuracy
+from sklearn.metrics import accuracy_score
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
