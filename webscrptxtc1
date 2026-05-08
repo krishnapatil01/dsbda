@@ -1,0 +1,69 @@
+GROUP C
+1 REVIEW
+
+1.	import bs4
+import requests
+import pandas as pd
+2.	req = requests.get('https://books.toscrape.com/catalogue/page-1.html')
+3.	print(req)
+4.	soup = bs4.BeautifulSoup(req.text)
+soup
+5.	soup.select('article')
+6.	soup.select('article h3 a')
+7.	len(soup.select('article h3 a'))
+8.	soup.select('article h3 a')
+9.	soup.select('article h3 a')[0]
+10.	soup.select('article h3 a')[0]['title']
+11.	soup.select('article p')
+12.	soup.select('article p')[0]
+13.	soup.select('article p')[0]['class']
+14.	soup.select('article p')[1]
+15.	soup.select('article p')[1]
+16.	soup.select('article p')[1].string
+17.	soup.select('article p')[1].string.replace('Â£','')
+18.	title_list =[]
+rating_list = []
+price_list = []
+for pg_num in range(1,51):
+  req = requests.get(f'https://books.toscrape.com/catalogue/page-{pg_num}.html')
+  soup_pg = bs4.BeautifulSoup(req.text)
+  for item in soup_pg.select('article h3 a'):
+    title_list.append(item['title'])
+  for n in range(0,60,3):
+     rating_list.append(soup_pg.select('article p')[n]['class'][1])
+  for n in range(1,60,3):
+     price_list.append(soup_pg.select('article p')[n].string.replace('Â£',''))
+19.	# price_list
+20.	dic = dict(zip(title_list,zip(rating_list, price_list)))
+df = pd.DataFrame.from_dict(dic, orient='index')
+df
+21.	# we already know the url
+soup.select('article h3 a')
+22.	nreq= requests.get('https://books.toscrape.com/catalogue/in-her-wake_980/index.html')
+23.	nsoup = bs4.BeautifulSoup(nreq.text)
+nsoup
+24.	nsoup.select('tr')
+25.	nsoup.select('tr th')
+26.	nsoup.select('tr td')
+27.	nsoup.select('tr td')[2].text
+28.	new_df = pd.DataFrame()  # empty dataframe
+index_num= 0             # index of dataframe
+for pg_num in range(1,51):
+  req = requests.get(f'https://books.toscrape.com/catalogue/page-{pg_num}.html')
+  soup_pg = bs4.BeautifulSoup(req.text)
+  book_info_list = soup_pg.select('article h3 a')   # all books on that page    # values of that features
+  for n in range(0,20):
+      res = requests.get('http://books.toscrape.com/catalogue/'+ book_info_list[n]['href']) # url of each book in above page
+      soup = bs4.BeautifulSoup(res.text, 'lxml')
+      book_features_column_list = soup.select('tr th')   # book features like price, rating of each book      book_column_values = soup.select('tr td')          # values of that features
+      column_names = [ item.text for item in book_features_column_list ]
+      column_values = [item.text for item in book_column_values ]
+ d = dict(zip(column_names, column_values))  # making dictionary with features as columns and values as rows
+      df = pd.DataFrame(d, index = [index_num + n]) 
+      new_df = new_df.append(df)   # append df of every page
+  index_num += 20  # index for each page to be incremented by 20 as zero_base index since there are 20 books on each page 
+29.	new_df
+30.	# adding new columns in a dataframe 
+new_df["Rating"] = rating_list
+new_df["Title"] = title_list
+new_df
